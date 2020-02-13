@@ -12,7 +12,7 @@ public class HelloControllerTest {
     HelloController helloController;
     @Test
     public void testSayHello(){
-        String result = helloController.sayHello("World");
+        String result = helloController.echoHello("World");
         assertEquals("Hello World", result);
     }
 }
