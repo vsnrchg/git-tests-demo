@@ -1,4 +1,12 @@
+FROM openjdk:8-jdk-alpine AS build
+WORKDIR /workspace/app
+COPY . /workspace/app
+RUN target=/root/.gradle ./gradlew clean build
+RUN mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*.jar)
 FROM openjdk:8-jdk-alpine
-ARG JAR_FILE=build/libs/demo-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+VOLUME /tmp
+ARG DEPENDENCY=/workspace/app/build/dependency
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.twlabs.gittests.demo.DemoApplication"]
