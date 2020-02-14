@@ -1,0 +1,3 @@
+#!/bin/bash
+unset LOGGING_LEVEL_ROOT
+unset LOGGING_LEVEL_COM_TWLABS
